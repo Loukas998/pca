@@ -4,18 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class HomeProject extends Model
+
+class HomeProject extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
     protected $guarded = ['created_at', 'updated_at'];
-
-    public function project() : BelongsTo
-    {
-        return $this->belongsTo(Project::class);
-    }
 
     public function registerMediaCollections(): void
     {

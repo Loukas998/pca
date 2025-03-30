@@ -6,15 +6,22 @@ use App\Http\Resources\HomeProjectResource;
 use App\Models\HomeProject;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponse;
-
+use App\Services\FileUploaderService;
 
 class HomeProjectController extends Controller
 {
     use ApiResponse;
 
+    private $fileUploaderService;
+
+    public function __construct(FileUploaderService $fileUploaderService)
+    {
+        $this->fileUploaderService = $fileUploaderService;
+    }
+
     public function index()
     {
-        return $this->ok('Home page projects', HomeProjectResource::collection(HomeProject::with('project')->orderBy('order')->get()));
+        return $this->ok('Home page projects', HomeProjectResource::collection(HomeProject::orderBy('order')->get()));
     }
 
     public function store(Request $request)
@@ -28,7 +35,7 @@ class HomeProjectController extends Controller
         $homeProject = HomeProject::create($data);
 
         if ($request->hasFile('image')) {
-            $homeProject->addMediaFromRequest('image')->toMediaCollection('home_projects');
+            $this->fileUploaderService->uploadSingleFile($homeProject, $request['image'], 'home_projects');
         }
         
         return $this->ok('Project added to home page', HomeProjectResource::make($homeProject));
@@ -40,6 +47,10 @@ class HomeProjectController extends Controller
         if($homeProject)
         {
             $homeProject->update($request->all());
+            if ($request->hasFile('image')) {
+                $this->fileUploaderService->clearCollection($homeProject, 'home_projects');
+                $this->fileUploaderService->uploadSingleFile($homeProject, $request['image'], 'home_projects');
+            }
             return $this->noContent('Updated');
         }
         return $this->error('Not Found', 404);
