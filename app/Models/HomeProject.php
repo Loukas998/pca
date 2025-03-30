@@ -16,4 +16,9 @@ class HomeProject extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('home_projects')->useDisk('public');
+    }
 }

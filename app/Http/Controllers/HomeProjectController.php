@@ -19,7 +19,18 @@ class HomeProjectController extends Controller
 
     public function store(Request $request)
     {
-        $homeProject = HomeProject::create($request->all());
+        $data = $request->validate([
+            'title' => 'string|required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'order' => 'integer|required'
+        ]);
+
+        $homeProject = HomeProject::create($data);
+
+        if ($request->hasFile('image')) {
+            $homeProject->addMediaFromRequest('image')->toMediaCollection('home_projects');
+        }
+        
         return $this->ok('Project added to home page', HomeProjectResource::make($homeProject));
     }
 
