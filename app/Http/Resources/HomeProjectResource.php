@@ -15,6 +15,7 @@ class HomeProjectResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id'        => $this->id,
             'title'     => $this->title,
             'order'     => $this->order,
             'image_url' => $this->getFirstMediaUrl('home_projects')

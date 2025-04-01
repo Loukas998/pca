@@ -9,7 +9,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\HomeProjectController;
 
-Route::controller(StoryController::class)->group(function() {
+Route::controller(StoryController::class)->group(function () {
     Route::post('stories', 'store')->middleware('auth:sanctum');
     Route::get('stories', 'index');
     Route::get('stories/{id}', 'show');
@@ -17,7 +17,7 @@ Route::controller(StoryController::class)->group(function() {
     Route::delete('stories/{id}', 'destroy')->middleware('auth:sanctum');
 });
 
-Route::controller(CategoryController::class)->group(function() {
+Route::controller(CategoryController::class)->group(function () {
     Route::post('categories', 'store')->middleware('auth:sanctum');
     Route::get('categories', 'index');
     Route::get('categories/{id}', 'show');
@@ -25,7 +25,7 @@ Route::controller(CategoryController::class)->group(function() {
     Route::delete('categories/{id}', 'destroy')->middleware('auth:sanctum');
 });
 
-Route::controller(ProjectController::class)->group(function() {
+Route::controller(ProjectController::class)->group(function () {
     Route::post('projects', 'store')->middleware('auth:sanctum');
     Route::get('projects', 'index');
     Route::get('projects/{id}', 'show');
@@ -33,7 +33,7 @@ Route::controller(ProjectController::class)->group(function() {
     Route::delete('projects/{id}', 'destroy')->middleware('auth:sanctum');
 });
 
-Route::controller(ContactUsController::class)->group(function() {
+Route::controller(ContactUsController::class)->group(function () {
     Route::post('contact-us', 'store');
     Route::get('contact-us', 'index');
     Route::get('contact-us/{id}', 'show');
@@ -41,15 +41,16 @@ Route::controller(ContactUsController::class)->group(function() {
     Route::delete('contact-us/{id}', 'destroy')->middleware('auth:sanctum');
 });
 
-Route::controller(HomeProjectController::class)->group(function() {
-    Route::post('home-projects', 'store')->middleware('auth:sanctum');
-    Route::get('home-projects', 'index');
-    Route::get('home-projects/{id}', 'show');
-    Route::put('home-projects/{id}', 'update')->middleware('auth:sanctum');
-    Route::delete('home-projects/{id}', 'destroy')->middleware('auth:sanctum');
+Route::prefix('home-projects')->controller(HomeProjectController::class)->group(function () {
+    Route::post('/', 'store')->middleware('auth:sanctum');
+    Route::get('/', 'index');
+    Route::get('/{id}', 'show');
+    Route::put('/{id}', 'update')->middleware('auth:sanctum');
+    Route::delete('/{id}', 'destroy')->middleware('auth:sanctum');
+    Route::post('/reorder', 'reorder')->middleware('auth:sanctum');
 });
 
-Route::controller(AuthController::class)->group(function() {
+Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::get('logout', 'logout')->middleware('auth:sanctum');
 });
