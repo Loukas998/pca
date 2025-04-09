@@ -56,15 +56,27 @@ class ProjectController extends Controller
         $project = Project::find($id);
         if($project)
         {
-            $project->update($request->all());
-            if ($request->hasFile('images')) {
-                $this->fileUploaderService->clearCollection($project, 'projects');
-
-                foreach ($request->file('images') as $image) {
-                    $this->fileUploaderService->uploadSingleFile($project, $image, 'projects');
+            if ($request->has('replacements')) {
+                foreach ($request->input('replacements') as $index => $replacement) {
+                    $mediaId = $replacement['media_id'];
+                    $imageFile = $request->file("replacements.{$index}.file");
+                    
+                    if ($imageFile && $mediaId) {
+                        $mediaItem = $project->media()->find($mediaId);
+                        if ($mediaItem) {
+                            // Delete old media
+                            $mediaItem->delete();
+                            
+                            // Add new media
+                            $this->fileUploaderService->uploadSingleFile(
+                                $project, 
+                                $imageFile, 
+                                'projects'
+                            );
+                        }
+                    }
                 }
             }
-
             return $this->noContent('Updated');
         }
         return $this->error('Not Found', 404);

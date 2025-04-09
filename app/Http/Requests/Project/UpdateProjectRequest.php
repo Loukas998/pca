@@ -22,11 +22,14 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'        => 'required|string',
-            'keywords'     => 'nullable|string',
-            'content'      => 'required|string',
-            'images'       => 'nullable|array',
-            'images.*'     => 'mimes:jpeg,jpg,png,webp,svg',
+            'title'                   => 'required|string',
+            'keywords'                => 'nullable|string',
+            'content'                 => 'required|string',
+            'images'                  => 'nullable|array',
+            'images.*'                => 'mimes:jpeg,jpg,png,webp,svg',
+            'replacements'            => 'nullable|array',
+            'replacements.*.media_id' => 'required_with:replacements|exists:media,id',
+            'replacements.*.file'     => 'required_with:replacements|image|mimes:jpeg,jpg,png,webp',
         ];
     }
 }

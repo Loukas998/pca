@@ -5,6 +5,8 @@ namespace App\Services;
 use Illuminate\Http\UploadedFile;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
+
 
 
 class FileUploaderService
