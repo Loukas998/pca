@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Story;
+
+use App\Http\Resources\StoryResource;
 use App\Services\FileUploaderService;
 use App\Http\Requests\Story\CreateStoryRequest;
 use App\Http\Requests\Story\UpdateStoryRequest;
-use App\Http\Resources\StoryResource;
-use App\Http\Traits\ApiResponse;
-use App\Models\Story;
-use Illuminate\Http\Request;
 
 class StoryController extends Controller
 {
-    use ApiResponse;
+
 
     private $fileUploaderService;
 
@@ -41,8 +40,7 @@ class StoryController extends Controller
     public function show($id)
     {
         $story = Story::find($id);
-        if($story)
-        {
+        if ($story) {
             return $this->ok('Story', StoryResource::make($story));
         }
         return $this->error('Not Found', 404);
@@ -51,8 +49,7 @@ class StoryController extends Controller
     public function update(UpdateStoryRequest $request, $id)
     {
         $story = Story::find($id);
-        if($story)
-        {
+        if ($story) {
             $story->update($request->all());
             if ($request->hasFile('image')) {
                 $this->fileUploaderService->clearCollection($story, 'stories');
@@ -67,8 +64,7 @@ class StoryController extends Controller
     public function destroy($id)
     {
         $story = Story::find($id);
-        if($story)
-        {
+        if ($story) {
             $story->delete();
             $this->fileUploaderService->clearCollection($story, 'stories');
 

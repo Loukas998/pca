@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Traits\ApiResponse;
+
 use App\Models\ContactUs;
 use Illuminate\Http\Request;
-use Mockery\Matcher\Contains;
+
 
 class ContactUsController extends Controller
 {
-    use ApiResponse;
 
     public function index()
     {
@@ -31,8 +30,7 @@ class ContactUsController extends Controller
     public function update(Request $request, $id)
     {
         $contact = ContactUs::find($id);
-        if($contact)
-        {
+        if ($contact) {
             $contact->update($request->all());
             return $this->noContent('Updated');
         }
@@ -42,8 +40,7 @@ class ContactUsController extends Controller
     public function destroy($id)
     {
         $contact = ContactUs::find($id);
-        if($contact)
-        {
+        if ($contact) {
             $contact->delete();
             return $this->noContent('Deleted');
         }

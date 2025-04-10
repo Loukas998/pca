@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\User\LoginRequest;
-use App\Http\Traits\ApiResponse;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    use ApiResponse;
+
 
     public function login(LoginRequest $request)
     {
@@ -36,7 +36,7 @@ class AuthController extends Controller
         $request->user()->tokens->each(function ($token) {
             $token->delete();
         });
-        
+
         return $this->ok('User logged out');
     }
 }

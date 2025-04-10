@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Resources\HomeProjectResource;
 use App\Models\HomeProject;
 use Illuminate\Http\Request;
-use App\Http\Traits\ApiResponse;
 use App\Services\FileUploaderService;
 
 class HomeProjectController extends Controller
 {
-    use ApiResponse;
 
     private $fileUploaderService;
 
@@ -28,7 +26,7 @@ class HomeProjectController extends Controller
     {
         $data = $request->validate([
             'title' => 'string|required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'order' => 'integer|required'
         ]);
 
