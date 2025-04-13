@@ -15,6 +15,6 @@ class Story extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('stories')->singleFile();
+        $this->addMediaCollection('stories')->useDisk('public');
     }
 }

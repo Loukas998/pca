@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReplaceImageRequest;
 use App\Models\Story;
 
 use App\Http\Resources\StoryResource;
-use App\Services\FileUploaderService;
+
 use App\Http\Requests\Story\CreateStoryRequest;
 use App\Http\Requests\Story\UpdateStoryRequest;
+use App\Http\Resources\ShowStoryResource;
+use App\Interfaces\IFileUploaderService;
 
 class StoryController extends Controller
 {
@@ -15,7 +18,7 @@ class StoryController extends Controller
 
     private $fileUploaderService;
 
-    public function __construct(FileUploaderService $fileUploaderService)
+    public function __construct(IFileUploaderService $fileUploaderService)
     {
         $this->fileUploaderService = $fileUploaderService;
     }
@@ -30,8 +33,10 @@ class StoryController extends Controller
         $data = $request->validated();
         $story = Story::create($data);
 
-        if ($request->hasFile('image')) {
-            $this->fileUploaderService->uploadSingleFile($story, $request['image'], 'stories');
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $this->fileUploaderService->uploadSingleFile($story, $image, 'stories');
+            }
         }
 
         return $this->ok('Story created', StoryResource::make($story));
@@ -41,29 +46,23 @@ class StoryController extends Controller
     {
         $story = Story::find($id);
         if ($story) {
-            return $this->ok('Story', StoryResource::make($story));
+            return $this->ok('Story', ShowStoryResource::make($story));
         }
         return $this->error('Not Found', 404);
     }
 
-    public function update(UpdateStoryRequest $request, $id)
+    public function update(UpdateStoryRequest $request, Story $story)
     {
-        $story = Story::find($id);
+
         if ($story) {
             $story->update($request->all());
-            if ($request->hasFile('image')) {
-                $this->fileUploaderService->clearCollection($story, 'stories');
-                $this->fileUploaderService->uploadSingleFile($story, $request['image'], 'stories');
-            }
-
             return $this->noContent('Updated');
         }
         return $this->error('Not Found', 404);
     }
 
-    public function destroy($id)
+    public function destroy(Story $story)
     {
-        $story = Story::find($id);
         if ($story) {
             $story->delete();
             $this->fileUploaderService->clearCollection($story, 'stories');
@@ -71,5 +70,11 @@ class StoryController extends Controller
             return $this->noContent('Deleted');
         }
         return $this->error('Not Found', 404);
+    }
+
+    public function replaceImage(ReplaceImageRequest $request, Story $story)
+    {
+        $media = $this->fileUploaderService->replaceMedia($story, $request->file('image'), $request->media_id, 'stories');
+        return $this->success('Image Replaced Successfuly', ["new_path" => $media->getUrl()], 200);
     }
 }

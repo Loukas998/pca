@@ -26,7 +26,7 @@ class UpdateStoryRequest extends FormRequest
             'location'      => 'required|string',
             'date'          => 'required|date',
             'content'       => 'required|string',
-            'image'         => 'nullable|mimes:jpeg,jpg,png,webp,svg'
+
         ];
     }
 }

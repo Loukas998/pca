@@ -13,8 +13,9 @@ Route::controller(StoryController::class)->group(function () {
     Route::post('stories', 'store')->middleware('auth:sanctum');
     Route::get('stories', 'index');
     Route::get('stories/{id}', 'show');
-    Route::put('stories/{id}', 'update')->middleware('auth:sanctum');
-    Route::delete('stories/{id}', 'destroy')->middleware('auth:sanctum');
+    Route::put('stories/{story}', 'update')->middleware('auth:sanctum');
+    Route::delete('stories/{story}', 'destroy')->middleware('auth:sanctum');
+    Route::post('stories/{story}/replace-image', 'replaceImage')->middleware('auth:sanctum');
 });
 
 Route::controller(CategoryController::class)->group(function () {
@@ -25,12 +26,13 @@ Route::controller(CategoryController::class)->group(function () {
     Route::delete('categories/{id}', 'destroy')->middleware('auth:sanctum');
 });
 
-Route::controller(ProjectController::class)->group(function () {
-    Route::post('projects', 'store')->middleware('auth:sanctum');
-    Route::get('projects', 'index');
-    Route::get('projects/{id}', 'show');
-    Route::put('projects/{id}', 'update')->middleware('auth:sanctum');
-    Route::delete('projects/{id}', 'destroy')->middleware('auth:sanctum');
+Route::prefix('projects')->controller(ProjectController::class)->group(function () {
+    Route::post('/', 'store')->middleware('auth:sanctum');
+    Route::get('/', 'index');
+    Route::get('/{id}', 'show');
+    Route::put('/{id}', 'update')->middleware('auth:sanctum');
+    Route::delete('/{id}', 'destroy')->middleware('auth:sanctum');
+    Route::post('/{project}/replace-image', 'replaceImage')->middleware("auth:sanctum");
 });
 
 Route::controller(ContactUsController::class)->group(function () {

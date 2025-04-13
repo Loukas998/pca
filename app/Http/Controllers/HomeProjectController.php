@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\HomeProjectResource;
+use App\Interfaces\IFileUploaderService;
 use App\Models\HomeProject;
 use Illuminate\Http\Request;
-use App\Services\FileUploaderService;
+
 
 class HomeProjectController extends Controller
 {
 
     private $fileUploaderService;
 
-    public function __construct(FileUploaderService $fileUploaderService)
+    public function __construct(IFileUploaderService $fileUploaderService)
     {
         $this->fileUploaderService = $fileUploaderService;
     }

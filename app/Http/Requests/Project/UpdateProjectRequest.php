@@ -23,10 +23,8 @@ class UpdateProjectRequest extends FormRequest
     {
         return [
             'title'        => 'required|string',
-            'keywords'     => 'nullable|string',
+            'category_id'     => 'nullable|exists:categories,id',
             'content'      => 'required|string',
-            'images'       => 'nullable|array',
-            'images.*'     => 'mimes:jpeg,jpg,png,webp,svg',
         ];
     }
 }
