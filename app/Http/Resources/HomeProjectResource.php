@@ -14,11 +14,20 @@ class HomeProjectResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $isAuthenticated = $request->user() !== null;
         return [
             'id'        => $this->id,
             'title'     => $this->title,
             'order'     => $this->order,
-            'image_url' => $this->getFirstMediaUrl('home_projects')
+            'images' => $this->getMedia('home_projects')->map(function ($media) use ($isAuthenticated) {
+                if ($isAuthenticated) {
+                    return [
+                        "id" => $media->id,
+                        "url" => $media->getUrl(),
+                    ];
+                }
+                return $media->getUrl();
+            }),
         ];
     }
 }

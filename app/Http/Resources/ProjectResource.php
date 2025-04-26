@@ -14,6 +14,7 @@ class ProjectResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $isAuthenticated = $request->user() !== null;
         return [
             'id' => $this->id,
             'title' => $this->title,
